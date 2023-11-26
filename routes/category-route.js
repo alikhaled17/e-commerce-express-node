@@ -7,9 +7,20 @@ const {
   remove,
 } = require("../services/category-service");
 
+const {
+  createCategoryValidator,
+  getCategoryValidator,
+  updateCategoryValidator,
+  deleteCategoryValidator,
+} = require("../utils/validators/category-validator");
+
 const router = express.Router();
 
-router.route("/").get(getAll).post(create);
-router.route("/:id").get(getOne).put(update).delete(remove);
+router.route("/").get(getAll).post(createCategoryValidator, create);
+router
+  .route("/:id")
+  .get(getCategoryValidator, getOne)
+  .put(updateCategoryValidator, update)
+  .delete(deleteCategoryValidator, remove);
 
 module.exports = router;

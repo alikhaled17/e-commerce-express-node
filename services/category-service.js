@@ -1,6 +1,6 @@
-const CategoryModel = require("../models/category-model");
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
+const CategoryModel = require("../models/category-model");
 
 // @desc   Get list of categories
 // @route  GET /api/v1/categories ?queryParam
@@ -29,7 +29,7 @@ exports.getOne = asyncHandler(async (req, res) => {
 // @route  POST /api/v1/categories
 // @access private
 exports.create = asyncHandler(async (req, res) => {
-  const Title = await req.body.Title;
+  const { Title } = req.body;
   const newCategory = await CategoryModel.create({
     Title,
     Slug: slugify(Title),
