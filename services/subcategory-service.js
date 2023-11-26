@@ -2,6 +2,15 @@ const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
 const SubcategoryModel = require("../models/subcategory-model");
 
+// middleware for creating filter object to request body data
+exports.createFilterObgToBody = (req, res, next) => {
+  let filterObject = {};
+  if (req.params.categoryId) {
+    filterObject = { Category: req.params.categoryId };
+  }
+  req.filterObj = filterObject;
+  next();
+};
 // @desc   Get list of subcategories
 // @route  GET /api/v1/subcategories ?queryParam
 // @access public
@@ -9,10 +18,10 @@ exports.getAll = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 4;
   const skip = (page - 1) * limit;
-  const data = await SubcategoryModel.find({})
+  const data = await SubcategoryModel.find(req.filterObj)
     .skip(skip)
     .limit(limit)
-    .populate({ path: "Category", select: ["_id", "Title"] }); // populate with select to get category title and category_id
+    .populate({ path: "Category", select: "Title" }); // populate with select to get category title and category_id
   res.status(201).send({ results: data.length, page, data, success: true });
 });
 
@@ -28,10 +37,16 @@ exports.getOne = asyncHandler(async (req, res) => {
   res.status(201).json({ data: category });
 });
 
+// middleware for setting category id to request body data
+exports.setCategoryIdToBody = (req, res, next) => {
+  if (!req.body.Category) req.body.Category = req.params.categoryId;
+  next();
+};
 // @desc   Create new category
 // @route  POST /api/v1/subcategories
 // @access private
 exports.create = asyncHandler(async (req, res) => {
+  if (!req.body.Category) req.body.Category = req.params.categoryId;
   const { Title, Category } = req.body;
   const newSubCategory = await SubcategoryModel.create({
     Title,

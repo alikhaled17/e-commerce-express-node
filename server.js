@@ -5,7 +5,8 @@ const morgan = require("morgan");
 dotenv.config({ path: "config.env" });
 const dbConnection = require("./config/db");
 const categoryRoute = require("./routes/category-route");
-const SubcategoryRoute = require("./routes/subcategory-route");
+const subcategoryRoute = require("./routes/subcategory-route");
+const brandRoute = require("./routes/brand-route");
 const ApiError = require("./utils/ApiError");
 
 // Connect with db
@@ -24,7 +25,8 @@ if (process.env.NODE_ENV === "development") {
 
 // Mount Routes
 app.use(`/api/${process.env.VERSION}/categories`, categoryRoute);
-app.use(`/api/${process.env.VERSION}/subcategories`, SubcategoryRoute);
+app.use(`/api/${process.env.VERSION}/subcategories`, subcategoryRoute);
+app.use(`/api/${process.env.VERSION}/brands`, brandRoute);
 
 app.use("*", (req, res, next) => {
   // Create error and send it to global handling error middleware
