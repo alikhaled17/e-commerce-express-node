@@ -46,7 +46,7 @@ exports.createProductValidator = [
     .withMessage("Product priceAfterDiscount must be a number")
     .toFloat()
     .custom((value, { req }) => {
-      if (req.body.price <= value) {
+      if (req.body.Price <= value) {
         throw new Error("priceAfterDiscount must be lower than price");
       }
       return true;
@@ -128,7 +128,7 @@ exports.updateProductValidator = [
   body("title")
     .optional()
     .custom((val, { req }) => {
-      req.body.slug = slugify(val);
+      req.body.Slug = slugify(val);
       return true;
     }),
   validatorMiddleware,

@@ -11,6 +11,7 @@ exports.getAll = asyncHandler(async (req, res) => {
   const skip = (page - 1) * limit;
   const data = await CategoryModel.find({}).skip(skip).limit(limit);
   res.status(201).send({ results: data.length, page, data, success: true });
+
 });
 
 // @desc   Get category by id
